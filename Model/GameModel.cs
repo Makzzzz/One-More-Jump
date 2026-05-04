@@ -21,6 +21,9 @@ public class GameModel
     private readonly LevelGenerator _levelGenerator;
     private readonly Stack<GameState> _gameStateHistory;
 
+    public event Action GameStateChanged;
+    public event Action GameOver;
+
     public GameModel()
     {
         _levelGenerator = new LevelGenerator();
@@ -65,6 +68,7 @@ public class GameModel
             PlayerFrog.Position = newPosition;
             CheckCollisions();
             CheckSafeZoneReached();
+            OnGameStateChanged();
         }
     }
 
@@ -112,10 +116,12 @@ public class GameModel
             if (Lives <= 0)
             {
                 IsGameOver = true;
+                OnGameOver();
             }
             else
             {
                 PlayerFrog.Position = new Point(7 * GridSize, 14 * GridSize);
+                OnGameStateChanged();
             }
         }
         else if (obstacle.Type == ObstacleType.Log || obstacle.Type == ObstacleType.Turtle)
@@ -125,6 +131,7 @@ public class GameModel
         {
             Lives = 0;
             IsGameOver = true;
+            OnGameOver();
         }
     }
 
@@ -159,9 +166,55 @@ public class GameModel
 
         _gameStateHistory.Push(state);
     }
-    
+
+    public void RewindTime()
+    {
+        if (_gameStateHistory.Count > 1)
+        {
+            _gameStateHistory.Pop();
+            var previousState = _gameStateHistory.Peek();
+
+            PlayerFrog.Position = previousState.FrogPosition;
+            Score = previousState.Score;
+            Level = previousState.Level;
+            Lives = previousState.Lives;
+
+            OnGameStateChanged();
+        }
+    }
+
+    public void TogglePause()
+    {
+        IsPaused = !IsPaused;
+        OnGameStateChanged();
+    }
+
+    public void Update()
+    {
+        if (IsGameOver || IsPaused) return;
+
+        int gameWidth = 15 * GridSize;
+        foreach (var obstacle in Obstacles)
+        {
+            obstacle.Update(gameWidth);
+        }
+
+        CheckCollisions();
+        OnGameStateChanged();
+    }
+
     public void ResetGame()
     {
         InitializeNewGame();
+    }
+
+    private void OnGameStateChanged()
+    {
+        GameStateChanged();
+    }
+
+    private void OnGameOver()
+    {
+        GameOver();
     }
 }

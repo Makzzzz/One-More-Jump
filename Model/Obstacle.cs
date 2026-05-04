@@ -8,6 +8,7 @@ namespace OneMoreJump.Model
 
         public ObstacleType Type { get; }
         public int Speed { get; }
+        public Color Color { get; }
 
         public bool IsActive { get; }
 
@@ -22,6 +23,7 @@ namespace OneMoreJump.Model
             Speed = speed;
             IsActive = true;
             Id = _nextId++;
+            Color = GetColorForType(type);
         }
 
         public Obstacle(Rectangle bounds, string typeName, int speed)
@@ -39,6 +41,8 @@ namespace OneMoreJump.Model
             {
                 Type = ObstacleType.Car;
             }
+            
+            Color = GetColorForType(Type);
         }
 
         public void Update(int gameWidth)
@@ -62,6 +66,18 @@ namespace OneMoreJump.Model
 
         public bool CheckCollision(Rectangle otherBounds) =>
             IsActive && Bounds.IntersectsWith(otherBounds);
+
+        private Color GetColorForType(ObstacleType type)
+        {
+            return type switch
+            {
+                ObstacleType.Car => Color.Red,
+                ObstacleType.Log => Color.Brown,
+                ObstacleType.Turtle => Color.Green,
+                ObstacleType.Crocodile => Color.DarkGreen,
+                _ => Color.Gray
+            };
+        }
 
         public override string ToString()
         {

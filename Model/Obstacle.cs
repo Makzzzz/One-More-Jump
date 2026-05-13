@@ -41,7 +41,7 @@ namespace OneMoreJump.Model
             {
                 Type = ObstacleType.Car;
             }
-            
+
             Color = GetColorForType(Type);
         }
 

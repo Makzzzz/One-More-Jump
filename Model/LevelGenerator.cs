@@ -42,7 +42,7 @@ namespace OneMoreJump.Model
 
             for (var row = 0; row < roadRows; row++)
             {
-                var y = (3 + row) * gridSize;
+                var y = (5 + row) * gridSize;
                 var direction = (row % 2 == 0) ? 1 : -1;
                 var speed = baseCarSpeed * direction;
                 var carCount = Math.Min(MinCarsPerRow + level, MaxCarsPerRow);
@@ -65,7 +65,7 @@ namespace OneMoreJump.Model
 
             for (var row = 0; row < riverRows; row++)
             {
-                var y = (8 + row) * gridSize;
+                var y = (10 + row) * gridSize;
                 var direction = (row % 3 == 0) ? 1 : -1;
                 var speed = baseLogSpeed * direction;
                 var logCount = Math.Min(MinLogsPerRow + (level / 2), MaxLogsPerRow);
@@ -89,7 +89,7 @@ namespace OneMoreJump.Model
 
                 for (var i = 0; i < crocodileCount; i++)
                 {
-                    var y = _random.Next(8 * gridSize, 13 * gridSize);
+                    var y = _random.Next(10 * gridSize, 15 * gridSize);
                     var x = _random.Next(0, gameWidth - gridSize * 2);
                     var speed = _random.Next(1, 3) * (_random.Next(0, 2) * 2 - 1);
                     var bounds = new Rectangle(x, y, gridSize * 2, gridSize);
@@ -99,7 +99,7 @@ namespace OneMoreJump.Model
 
             if (level >= 8)
             {
-                var fastCarRow = _random.Next(3, 8);
+                var fastCarRow = _random.Next(5, 10);
                 var y = fastCarRow * gridSize;
                 var x = _random.Next(0, gameWidth);
                 var speed = (level / 2) * (_random.Next(0, 2) * 2 - 1);

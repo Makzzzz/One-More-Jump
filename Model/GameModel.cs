@@ -35,7 +35,7 @@ public class GameModel
 
     private void InitializeNewGame()
     {
-        var startPosition = new Point(7 * GridSize, 14 * GridSize);
+        var startPosition = new Point(7 * GridSize, 17 * GridSize);
         PlayerFrog = new Frog(startPosition, GridSize);
 
         Score = 0;
@@ -84,13 +84,15 @@ public class GameModel
         };
     }
 
-    private bool IsPositionWithinBounds(Point position)
+    private static bool IsPositionWithinBounds(Point position)
     {
-        var maxX = 15 * GridSize;
-        var maxY = 20 * GridSize;
+        const int maxX = 15 * GridSize;
+        const int maxY = 20 * GridSize;
 
-        return position.X >= 0 && position.X < maxX &&
-               position.Y >= 0 && position.Y < maxY;
+        return position.X >= 0
+               && position.X < maxX
+               && position.Y >= 0
+               && position.Y < maxY;
     }
 
     private void CheckCollisions()
@@ -120,7 +122,7 @@ public class GameModel
             }
             else
             {
-                PlayerFrog.Position = new Point(7 * GridSize, 14 * GridSize);
+                PlayerFrog.Position = new Point(7 * GridSize, 17 * GridSize);
                 OnGameStateChanged();
             }
         }
@@ -137,12 +139,12 @@ public class GameModel
 
     private void CheckSafeZoneReached()
     {
-        if (PlayerFrog.Position.Y < 2 * GridSize)
+        if (PlayerFrog.Position.Y < 1 * GridSize)
         {
             Score += PointsPerSafeCrossing;
             Level++;
             GenerateLevelObstacles();
-            PlayerFrog.Position = new Point(7 * GridSize, 14 * GridSize);
+            PlayerFrog.Position = new Point(7 * GridSize, 17 * GridSize);
         }
     }
 
@@ -193,7 +195,7 @@ public class GameModel
     {
         if (IsGameOver || IsPaused) return;
 
-        int gameWidth = 15 * GridSize;
+        const int gameWidth = 15 * GridSize;
         foreach (var obstacle in Obstacles)
         {
             obstacle.Update(gameWidth);
@@ -203,18 +205,9 @@ public class GameModel
         OnGameStateChanged();
     }
 
-    public void ResetGame()
-    {
-        InitializeNewGame();
-    }
+    public void ResetGame() => InitializeNewGame();
 
-    private void OnGameStateChanged()
-    {
-        GameStateChanged();
-    }
+    private void OnGameStateChanged() => GameStateChanged();
 
-    private void OnGameOver()
-    {
-        GameOver();
-    }
+    private void OnGameOver() => GameOver();
 }
